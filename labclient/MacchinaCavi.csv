@@ -1,0 +1,13 @@
+Descrizione,File,Target,Flussimetro,Valvola,Sensori,Label-cavi
+SxP,Cavi-Target,0,-1,-1,-1,0
+DxP,Cavi-Target,1,-1,-1,-1,1
+DxC,Cavi-Target,2,-1,-1,-1,2
+SxC,Cavi-Target,3,-1,-1,-1,3
+MidDX,Cavi-Target,4,-1,-1,-1,4
+MidDX,Cavi-Target,5,-1,-1,-1,5
+Argon,Cavi-Gas,-1,0,0,-1,-1
+Arzoto,Cavi-Gas,-1,1,1,-1,-1
+Aceti,Cavi-Gas,-1,2,2,-1,-1
+Penn,Cavi-Gas,-1,-1,-1,0,-1
+Baratron,Cavi-Gas,-1,-1,3,1,-1
+Venting,Cavi-Gas,-1,-1,4,-1,-1

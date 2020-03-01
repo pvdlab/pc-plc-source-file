@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>multiFlash.ui</file>
+        <file>image2.png</file>
+        <file>image1.png</file>
+    </qresource>
+</RCC>

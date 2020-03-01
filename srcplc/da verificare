@@ -1,0 +1,242 @@
+/*WORD  CMacchina::Macchina_GetNetData(char *Buffer)
+{
+  int len=0,Tmp=0;
+  char  *pBuffer=Buffer;
+  memset(pBuffer,'\0',D_BUFFER);
+
+  struct NetDataType pNetData;
+  pNetData.Impianto = Impianto ;
+  pNetData.VersioneSoftware = VERSIONESOFTWARE ;
+  pNetData.StatoMacchina = pData.StatoMacchina ;
+  pNetData.StatoVuoto = pData.StatoVuoto ;
+  pNetData.EnabledVenting = pData.EnabledVenting ;
+  pNetData.Comando = pData.Comando ;
+  pNetData.ComandoAttivato = pData.ComandoAttivato ;
+  pNetData.ComandoRicevuto = pData.ComandoRicevuto ;
+  pNetData.ComandoEseguito = pData.ComandoEseguito ;
+  pNetData.MessaggioRicevuto = pData.MessaggioRicevuto ;
+  pNetData.MessaggioLen = pData.MessaggioLen ;
+  pNetData.SorgentiOn = pData.SorgentiOn ;
+  pNetData.ResistenzaPotenza = Resistenza.Potenza() ;
+  pNetData.BiasLowCount = pData.BiasLowCount ;
+  pNetData.MainTime = m_MainTimer.Time() ;
+  pNetData.TimeEvent = TimerEvent.Time()/1000 ;
+  pNetData.TimeEventStop = TimerEvent.StopTime()/1000 ;
+  pNetData.Time = Timer.Time()/1000 ;
+  pNetData.TimeStop = Timer.StopTime()/1000 ;
+  pNetData.StepTime = StepTimer.Time()/1000 ;
+  pNetData.StepTimeStop = StepTimer.StopTime()/1000 ;
+  pNetData.ScanTime = ScanTime ;
+  pNetData.TipoStep = pData.TipoStep ;
+  pNetData.StepCount = pData.StepCount ;
+  pNetData.StepIndex = pData.StepIndex ;
+  pNetData.RepitCount = pData.RepitCount ;
+  pNetData.Repit = pData.Repit ;
+  pNetData.ComStepLoad = pData.ComStepLoad ;
+  pNetData.Ciclo = pData.File.Ciclo ;
+  pNetData.ProcessoId = pData.File.ProcessoId ;
+  pNetData.ProcessoRecord = pData.File.ProcessoRecord ;
+  pNetData.ProcessoIsOn = pData.ProcessoIsOn ;
+  pNetData.ErrCount = pData.ErrCount ;
+  pNetData.ErrPreProcesso = pData.ErrPreProcesso ;
+  pNetData.ErrProcesso = pData.ErrProcesso ;
+  pNetData.EventoProcessoCount = pData.EventoProcessoCount ;
+  pNetData.EventoProcessoDi = pData.EventoProcessoDi ;
+  pNetData.RecordCount = pData.RecordCount ;
+  pNetData.ProcessoCorrotto = pData.ProcessoCorrotto ;
+  pNetData.Simula = pData.Simula ;
+
+  memcpy(pBuffer,&pNetData,sizeof(pNetData));
+  len+=sizeof(pNetData);
+  pBuffer+=sizeof(pNetData);
+
+  Tmp=GetPlcSegnali(pBuffer);
+  len+=Tmp;
+  pBuffer+=Tmp;
+
+  Macchina_PrintErrori();
+  memcpy(pBuffer,pData.Errore,m_ErrSize);
+  len+=m_ErrSize;
+  pBuffer+=m_ErrSize;
+
+  if(pData.MessaggioLen+len<D_BUFFER ){
+      if(pData.MessaggioLen){
+          memcpy(pBuffer,Msg,pData.MessaggioLen);
+          len+=pData.MessaggioLen;
+          pBuffer+=pData.MessaggioLen;
+      }
+      memset(Msg,0,D_MSG);
+      pData.MessaggioLen=0;
+  }
+
+  memcpy(pBuffer,FINE_MSG,strlen(FINE_MSG));
+  len+=strlen(FINE_MSG);
+
+  return len;
+
+
+}*/
+
+void  QNetPlc::SetNetData(char *Buffer)
+{
+
+
+  struct NetDataType  pNewData;
+  memcpy(&pNewData,Buffer,sizeof(NetDataType));
+
+  Buffer+=sizeof(NetDataType);
+
+  Impianto=pNewData.Impianto;
+
+
+  if(!IsVisibile)
+      return;
+
+  if(pData.StatoMacchina!=pNewData.StatoMacchina){
+    pData.StatoMacchina=pNewData.StatoMacchina;
+    emit StatoMacchina(pNewData.StatoMacchina);
+  }
+
+  if(pData.StatoVuoto!=pNewData.StatoVuoto){
+    pData.StatoVuoto=pNewData.StatoVuoto;
+    emit StatoVuoto(pNewData.StatoVuoto);
+  }
+
+  pData.EnabledVenting=pNewData.EnabledVenting;
+
+
+  if(pData.Comando!=pNewData.Comando){
+     pData.Comando=pNewData.Comando;
+     emit ComandoAttivato(pNewData.Comando);
+  }
+
+
+  if(pData.ComandoAttivato!=pNewData.ComandoAttivato){
+     pData.ComandoAttivato=pNewData.ComandoAttivato;
+     emit ComandoAttivato(pNewData.ComandoAttivato);
+  }
+
+  if(pData.ComandoRicevuto!=pNewData.ComandoRicevuto){
+     pData.ComandoRicevuto=pNewData.ComandoRicevuto;
+     emit ComandoRicevuto(pNewData.ComandoRicevuto);
+  }
+
+  if(pData.ComandoEseguito!=pNewData.ComandoEseguito){
+     pData.ComandoEseguito=pNewData.ComandoEseguito;
+     emit ComandoEseguito(pNewData.ComandoEseguito);
+  }
+
+  if(pData.MessaggioRicevuto!=pNewData.MessaggioRicevuto){
+     pData.MessaggioRicevuto=pNewData.MessaggioRicevuto;
+     emit MessaggioRicevuto(pNewData.MessaggioRicevuto);
+  }
+  pData.MessaggioLen=pNewData.MessaggioLen;
+
+  pData.SorgentiOn=pNewData.SorgentiOn;
+  EventTime=pNewData.TimeEvent;
+  EventStopTime=pNewData.TimeEventStop;
+  MainTimer=pNewData.MainTime;
+  Time=pNewData.Time;
+
+  if(StopTime!=pNewData.TimeStop){
+     if(pNewData.TimeStop-StopTime>0 && pData.ProcessoIsOn)
+        emit AddTempo(pNewData.TimeStop-StopTime);
+    StopTime=pNewData.TimeStop;
+  }
+
+
+  StepTime=pNewData.StepTime;
+  StepStopTime=pNewData.StepTimeStop;
+
+  if(pData.TipoStep!=pNewData.TipoStep){
+      pData.TipoStep=pNewData.TipoStep;
+      emit CambiaCTipoStep(pNewData.TipoStep);
+  }
+
+  pData.StepCount=pNewData.StepCount;
+  pData.StepIndex=pNewData.StepIndex;
+  pData.RepitCount=pNewData.RecordCount;
+  pData.Repit=pNewData.Repit;
+  Resistenza.setPotenza(pNewData.ResistenzaPotenza);
+
+  if(pNewData.ProcessoId!=pData.File.ProcessoId ){
+    pData.File.ProcessoId=pNewData.ProcessoId;
+    QByteArray Buffer(10,0);
+    BYTE *pBuffer=Buffer.data();
+    int len=0;
+    pBuffer=ByteStr(pBuffer,1 ,&len);
+    pBuffer=ByteStr(pBuffer,1 ,&len);
+    pBuffer=WORDStr(pBuffer,pData.File.ProcessoId ,&len);
+    emit Processo(pNewData.ProcessoId);
+  }
+
+
+  if(pNewData.ComStepLoad!=pData.ComStepLoad){
+    pData.ComStepLoad=pNewData.ComStepLoad;
+    emit CompStepLoad(pNewData.ComStepLoad);
+  }
+
+  pData.File.Ciclo=pNewData.Ciclo;
+  pData.File.ProcessoRecord=pNewData.ProcessoRecord;//
+
+  if(pNewData.ProcessoIsOn!=pData.ProcessoIsOn ){
+    if(pNewData.ProcessoIsOn){
+       pData.ProcessoIsOn=pNewData.ProcessoIsOn;
+       emit ProcessoIsOn();
+    }
+    if(!pNewData.ProcessoIsOn && pData.ProcessoIsOn){
+       pData.ProcessoIsOn=pNewData.ProcessoIsOn;
+       emit ProcessoIsOff();
+       }
+  }
+
+  ScanTime= pNewData.ScanTime;
+
+  if(pNewData.ErrCount!=pData.ErrCount){
+    pData.ErrCount=pNewData.ErrCount;
+    emit nuovoErrore(pNewData.ErrCount);
+  }
+  pData.ErrPreProcesso=pNewData.ErrPreProcesso;
+  pData.ErrProcesso=pNewData.ErrProcesso;
+
+
+  if(pNewData.EventoProcessoCount!=pData.EventoProcessoCount){
+    if(pNewData.EventoProcessoCount>=MAX_MSG){
+       pNewData.EventoProcessoCount=0;
+    }else{
+        pData.EventoProcessoCount=pNewData.EventoProcessoCount;
+        if(pData.ProcessoIsOn & pData.EventoProcessoCount!=0){
+        }
+    }
+
+  }
+  pData.EventoProcessoDi=pNewData.EventoProcessoDi;
+  pData.RecordCount=pNewData.RecordCount;
+
+  pData.ComStepLoad=pNewData.ComStepLoad;
+
+  if(pNewData.ProcessoCorrotto!=pData.ProcessoCorrotto & pNewData.ProcessoCorrotto){
+    emit ProcessoCorrotto(pData.File.ProcessoId,pData.ComStepLoad);
+  }
+  pData.ProcessoCorrotto=pNewData.ProcessoCorrotto;
+  pData.Simula=pNewData.Simula;
+
+  SetPlcSegnali(&Buffer);
+  memcpy(pData.Errore,Buffer,m_ErrSize);
+
+  Buffer+=m_ErrSize;
+
+
+  if(pData.MessaggioLen){
+    char msg[D_MSG];
+    char *pmsg=msg;
+    memcpy(pmsg,Buffer,pData.MessaggioLen);
+    QString str=msg;
+    emit MsgRicevuti(pData.EventoProcessoDi+1, pData.EventoProcessoCount-1, str);
+  }
+
+  emit NuovaData();
+
+
+}
+

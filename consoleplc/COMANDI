@@ -1,0 +1,109 @@
+ssh -p220 ronzoni-6011-001@78.134.78.239
+scp -P 220 /home/ricvb/run/consoleplc/consoleplc ronzoni-6011-001@78.134.78.239:
+sudo cp consoleplc /home/ronzoni-6011-001/run/consoleplc/consoleplc
+
+scp -P 220 /home/ricvb/run/labclient/labclient ronzoni-6011-001@78.134.78.239:
+sudo cp labclient /home/ronzoni-6011-001/run/labclient/labclient
+
+ssh -p5650 ricvb@78.134.17.216
+scp -P 5650 /home/ricvb/run/consoleplc/consoleplc ricvb@78.134.17.216:
+sudo cp consoleplc /home/ricvb/run/consoleplc/consoleplc
+sudo cp consoleplc /home/ricvb/run/consoleplc/stabile
+sudo cp consoleplc stabile
+
+
+http://gaiger-programming.blogspot.com/2015/03/simple-linux-serial-port-programming-in.html
+
+sun wnadboard vedi qui:
+https://github.com/gumstix/yocto-manifest/wiki/Cross-Compile-with-QtCreator
+
+per debug guarda qui
+http://processors.wiki.ti.com/index.php/Sitara_Linux_Training:_Hands_on_with_QT#Debugging_QT_Libraries
+INSTALLA
+sudo apt-get install  openssh-server
+sudo apt-get install  gdb
+
+[MSQL]
+sudo apt-get update
+sudo apt-get install mysql-server
+sudo apt-get install libqt5sql5-mysql
+sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+bind-address = 127.0.0.1 to: #bind-address = 127.0.0.1
+
+risolvi prob del grup per msql 5.7
+sudo nano /etc/mysql/my.cnf
+
+aggoingi
+[mysqld]
+sql_mode = STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+
+ACCEDI DA SSH
+mysql -u root -p
+CREA UTENTE
+GRANT ALL ON *.* TO 'utente'@'%' IDENTIFIED BY 'ricvb';
+
+
+CREATE TABLE `CICLO` (
+  `ID_CICLO` int(11)  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `CICLO` int(11) DEFAULT NULL,
+  `ANNO` int(11) DEFAULT NULL,
+  `ID_PROCESSO` int(11) DEFAULT NULL,
+  `START` datetime DEFAULT NULL,
+  `STOP` datetime DEFAULT NULL,
+  `ID_CARICA` int(11) DEFAULT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+[ACCEDI]
+mysql -u utente -h localhost -p
+use DATI
+
+[MOSTRA STRUTTURA TABELLE]
+DESCRIBE CICLO;
+DESCRIBE DATA;
+
+[MOSTRA TABELLA]
+SELECT * FROM CICLO;
+SELECT * FROM DATA;
+
+[ELIMINA TABELLA]
+DROP TABLE DATA;
+DROP TABLE CICLO;
+
+
+abilita porta
+sudo gpasswd --add ricvb dialout
+
+ ssh -p5650 ricvb@5.157.104.82
+ ssh -p220 ronzoni-6011-001@5.157.104.82
+ sudo rm /home/ricvb/run/consoleplc/consoleplc
+ scp -P 5650 /home/ricvb/run/consoleplc/consoleplc ricvb@labserver.jumpingcrab.com:/home/ricvb/run/consoleplc/consoleplc
+ scp -P 5650 /home/ricvb/run/consoleplc/consoleplc ricvb@5.157.104.82:
+ sudo rm run/consoleplc/consoleplc
+ sudo cp consoleplc /home/ricvb/run/consoleplc/consoleplc
+ ssh -p5650 ricvb@labserver.jumpingcrab.com
+
+
+pgrep consoleplc
+ sudo nano /etc/rc.local
+/home/ricvb/run/consoleplc.sh
+
+
+ * consoleplc.sh
+#!/bin/sh
+home="/home/ricvb"
+run="/home/ricvb/run/consoleplc"
+
+cd $run
+./consoleplc & exit 0
+
+sudo chmod +x /etc/rc.local
+sudo chmod +x /home/ricvb/run/consoleplc.sh
+sudo chmod +x /home/ronzoni-6011-001/run/consoleplc.sh
+
+
+copia File su server
+sudo gpasswd --add ricvb dialout
+scp -P 5650 /home/ricvb/run/consoleplc/consoleplc  ricvb@78.134.78.158:
+ps -ax | grep consoleplc
+
