@@ -21,7 +21,7 @@ you have to create the account (login)  and (password)
 you have to import  client.sql (https://github.com/pvdlab/pc-plc-source-file/blob/master/client.sql)
 
 you have to create one client file on your home working folder as labclientnet (in my case is /home/ricvb/labclientnet)
-in this file youn  have to write (800 600 locale 6012 Macchina localhost utente ricvb 3306 localhost utente ricvb 3306 ):
+in this file youn  have to write (800 600 locale Macchina ClientPort localhost utente ricvb 3306 localhost utente ricvb 3306 ):
 (800 600 locale) is the video resoluction of the equipment
 Macchina; is the equipment select (in may case Is 6012)
 ClientPort; is the client Plc port (you can canche this port after but to defold is 6100)
