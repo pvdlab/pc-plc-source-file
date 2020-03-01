@@ -18,5 +18,6 @@ make install
 
 you have to install phpmyadmin 
 you have to create the account (login)  and (password)
+you have to import  client.sql (in this file there are the processe)
 
 in the consoleplc folder you can find the the server PLC source coude
