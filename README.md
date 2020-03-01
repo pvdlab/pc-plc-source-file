@@ -18,6 +18,15 @@ make install
 
 you have to install phpmyadmin 
 you have to create the account (login)  and (password)
-you have to import  client.sql (in this file there are the processe)
+you have to import  client.sql (https://github.com/pvdlab/pc-plc-source-file/blob/master/client.sql)
+
+you have to create one client file on your home working folder as labclientnet (in my case is /home/ricvb/labclientnet)
+in this file youn  have to write:
+800 600 locale 6012:
+800 600 is the video resoluction of the equpment
+6012 is th ìs the equipment select (in may case I have tow equpmemts)
+
+800 600 locale 6012 6100 localhost utente ricvb 3306 localhost utente ricvb 3306 
+
 
 in the consoleplc folder you can find the the server PLC source coude
